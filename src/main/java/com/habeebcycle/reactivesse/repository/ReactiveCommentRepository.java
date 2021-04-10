@@ -4,9 +4,9 @@ import com.habeebcycle.reactivesse.model.Comment;
 import com.habeebcycle.reactivesse.utils.CommentGenerator;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,20 +17,24 @@ public class ReactiveCommentRepository implements CommentRepository{
     public Flux<Comment> findAll() {
         return Flux.interval(Duration.ofSeconds(3))
                 .onBackpressureDrop()
-                .map(this::generateComment)
+                .map(this::generateAllComment)
                 .flatMapIterable(x -> x);
     }
 
-    private List<Comment> generateComment(long interval) {
+    @Override
+    public Mono<Comment> findOne() {
+        return Mono.just(generateComment());
+    }
 
+    private List<Comment> generateAllComment(long interval) {
+        return Collections.singletonList(generateComment());
 
+    }
 
-        Comment obj = new Comment(
+    private Comment generateComment() {
+        return new Comment(
                 CommentGenerator.randomAuthor(),
                 CommentGenerator.randomMessage(),
                 CommentGenerator.getCurrentTimeStamp());
-
-        return Collections.singletonList(obj);
-
     }
 }

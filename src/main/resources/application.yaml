@@ -1,0 +1,31 @@
+server:
+  port: 7000
+  error:
+    include-message: always
+
+spring:
+  cloud.stream:
+    default-binder: kafka
+    default.contentType: application/json
+    bindings:
+      output-comments:
+        destination: comments
+        producer:
+          required-groups: auditGroup
+      input:
+        destination: comments
+        group: commentsGroup
+        consumer:
+          maxAttempts: 3
+          backOffInitialInterval: 500
+          backOffMaxInterval: 1000
+          backOffMultiplier: 2.0
+
+    kafka:
+      bindings:
+        input.consumer:
+          enableDlq: true
+      binder:
+        brokers:
+          - 127.0.0.1
+        defaultBrokerPort: 9092
