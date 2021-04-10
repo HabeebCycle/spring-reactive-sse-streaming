@@ -5,7 +5,7 @@ server:
 
 spring:
   cloud.stream:
-    default-binder: kafka
+    defaultBinder: rabbit # Change this to 'kafka' for kafka topics
     default.contentType: application/json
     bindings:
       output-comments:
@@ -22,10 +22,20 @@ spring:
           backOffMultiplier: 2.0
 
     kafka:
-      bindings:
-        input.consumer:
+      bindings.input.consumer:
           enableDlq: true
       binder:
-        brokers:
-          - 127.0.0.1
+        brokers: 127.0.0.1
         defaultBrokerPort: 9092
+
+    rabbit.bindings.input.consumer:
+      autoBindDlq: true
+      republishToDlq: true
+
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+comment.interval: 2

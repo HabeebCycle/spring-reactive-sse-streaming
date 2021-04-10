@@ -1,5 +1,6 @@
 package com.habeebcycle.reactivesse.controller;
 
+import com.habeebcycle.reactivesse.event.CommentEvent;
 import com.habeebcycle.reactivesse.model.Comment;
 import com.habeebcycle.reactivesse.service.CommentService;
 import org.springframework.http.MediaType;
@@ -14,13 +15,13 @@ public class CommentController {
     private final CommentService commentService;
     private final Flux<Comment> events;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, CommentEvent commentEvent) {
         this.commentService = commentService;
-        this.events = Flux.create(commentService).share();
+        this.events = Flux.create(commentEvent).share();
     }
 
     @GetMapping(path = "/comment/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Comment> feed() {
+    public Flux<Comment> getIntervalComment() {
         return commentService.getIntervalComment();
     }
 
