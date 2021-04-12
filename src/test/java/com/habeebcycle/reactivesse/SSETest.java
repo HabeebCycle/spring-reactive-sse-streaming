@@ -1,4 +1,4 @@
-package com.habeebcycle.reactivesse.messaging;
+package com.habeebcycle.reactivesse;
 
 import com.habeebcycle.reactivesse.model.Comment;
 import org.junit.jupiter.api.Assertions;
